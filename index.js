@@ -1,7 +1,7 @@
-const express = require('express')
-const fileUpload = require('express-fileupload')
-const path = require('path')
-const cors = require('cors')
+import 'dotenv/config' 
+import cors from 'cors'
+import express from 'express'
+import { routerUsuario } from './routes/user.js'
 
 const app = express()
 
@@ -11,12 +11,10 @@ app.set('port', process.env.PORT || DEFAULT_PORT)
 
 // Middleware
 app.use(express.json())
-app.use(fileUpload())
 app.use(cors())
 
 // Routes
-const routes = path.join(__dirname, '/routes')
-app.use(require(path.join(routes, 'user.js')))
+app.use(routerUsuario)
 
 // Default route
 app.get('/', (_, res) => {
@@ -29,4 +27,3 @@ app.listen(port, () => {
     console.log(`Listening on port ${port}`)
     console.log(`http://localhost:${port}`)
 })
-
