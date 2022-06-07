@@ -61,6 +61,7 @@ const createUsuario = (nuevoUsuario) => {
 const updateUsuario = (usuario) => {
 	const _id = new ObjectId(usuario._id)
 	delete usuario._id
+	delete usuario.token
 	
 	return new Promise(async (resolve, reject) => {
 		try {
