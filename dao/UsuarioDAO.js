@@ -27,7 +27,7 @@ const login = (user) => {
 				estado: 'activo',
 			})
 			if (!loggedUsuario) {
-				reject('Credenciales Incorrectas')
+				resolve()
 			}
 			resolve(loggedUsuario)
 		} catch (error) {

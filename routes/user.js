@@ -1,14 +1,14 @@
-import express from 'express'
+import { Router } from 'express'
 import { UsuarioDAO } from '../dao/UsuarioDAO.js'
 import { createToken, ensureAuthenticated } from '../controllers/Authentication.js'
 
-export const routerUsuario = express.Router()
+export const routerUsuario = Router()
 
 routerUsuario.post('/usuario/login', async (req, res) => {
 	const usuario = req.body
 	try {
 		const loggedUsuario = await UsuarioDAO.login(usuario)
-		if (usuario.contraseña != loggedUsuario.contraseña) {
+		if (!loggedUsuario) {
 			res.status(401).json({
 				mensaje: 'Credenciales Incorrectas',
 			})
@@ -16,25 +16,21 @@ routerUsuario.post('/usuario/login', async (req, res) => {
 		}
 		res.json({
 			...loggedUsuario,
-			token: createToken(usuario)
+			token: createToken(loggedUsuario)
 		})
 	} catch (error) {
 		console.error(error)
-		res.status(500).json({
-			error: error
-		})
+		res.status(500).json({ error })
 	}
 })
 
-routerUsuario.get('/usuario/getall', ensureAuthenticated, async (_, res) => {
+routerUsuario.get('/usuario/getall', ensureAuthenticated, async (req, res) => {
 	try {
 		const usuarios = await UsuarioDAO.getAllUsuarios()
 		res.json(usuarios)
 	} catch (error) {
 		console.error(error)
-		res.status(500).json({
-			error: error
-		})
+		res.status(500).json({ error })
 	}
 })
 

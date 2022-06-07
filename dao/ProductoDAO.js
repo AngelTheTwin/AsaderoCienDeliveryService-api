@@ -1,20 +1,21 @@
-import { client } from './MongoConnection'
+import { client } from './MongoConnection.js'
+import { ObjectId } from 'mongodb'
 
-export const getAllProductos = () => {
+const getAllProductos = () => {
 	return new Promise(async (resolve, reject) => {
 		try {
 			await client.connect()
-			const produtos = await client.db().collection('Producto').find().toArray()
+			const produtos = await client.db().collection('Producto').find({ estado: 'activo' }).toArray()
 			resolve(produtos)
 		} catch (error) {
 			reject(error)
 		} finally {
-			client.close()
+			await client.close()
 		}
 	})
 }
 
-export const getAllProductosGroupedByCategoria = () => {
+const getAllProductosGroupedByCategoria = () => {
 	const pipeline = [
 		{
 			$group: {
@@ -32,7 +33,69 @@ export const getAllProductosGroupedByCategoria = () => {
 		} catch (error) {
 			reject(error)
 		} finally {
-			client.close()
+			await client.close()
 		}
 	})
+}
+
+const createProducto = (newProducto) => {
+	return new Promise(async (resolve, reject) => {
+		try {
+			await client.connect()
+			await client.db().collection('Producto').insertOne({
+				...newProducto,
+				estado: 'activo'
+			})
+			resolve('Producto creado con éxito.')
+		} catch (error) {
+			reject(error)
+		} finally {
+			await client.close()
+		}
+	})
+}
+
+const updateProducto = (produto) => {
+	const _id = new ObjectId(produto._id)
+	delete produto._id
+
+	return new Promise(async (resolve, reject) => {
+		try {
+			await client.connect()
+			await client.db().collection('Producto').updateOne({ _id }, {
+				$set: { ...produto }
+			})
+			resolve('Producto actualizado con éxito.')
+		} catch (error) {
+			reject(error)
+		} finally {
+			await client.close()
+		}
+	})
+}
+
+const deleteProducto = (producto) => {
+	const _id = new ObjectId(producto._id)
+
+	return new Promise(async (resolve, reject) => {
+		try {
+			await client.connect()
+			await client.db().collection('Producto').updateOne({ _id }, {
+				$set: { estado: 'inactivo' }
+			})
+			resolve('Producto eliminado con éxito.')
+		} catch (error) {
+			reject(error)
+		} finally {
+			await client.close()
+		}
+	})
+}
+
+export const ProductoDAO = {
+	getAllProductos,
+	getAllProductosGroupedByCategoria,
+	createProducto,
+	updateProducto,
+	deleteProducto
 }

@@ -2,6 +2,7 @@ import 'dotenv/config'
 import cors from 'cors'
 import express from 'express'
 import { routerUsuario } from './routes/user.js'
+import { routerProducto } from './routes/producto.js'
 
 const app = express()
 
@@ -15,6 +16,7 @@ app.use(cors())
 
 // Routes
 app.use(routerUsuario)
+app.use(routerProducto)
 
 // Default route
 app.get('/', (_, res) => {
