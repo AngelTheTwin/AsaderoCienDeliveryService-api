@@ -1,5 +1,5 @@
 import express from 'express'
-import * as UsuarioDAO from '../dao/UsuarioDAO.js'
+import { UsuarioDAO } from '../dao/UsuarioDAO.js'
 import { createToken, ensureAuthenticated } from '../controllers/Authentication.js'
 
 export const routerUsuario = express.Router()
