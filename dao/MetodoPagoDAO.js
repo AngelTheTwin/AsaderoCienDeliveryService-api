@@ -1,22 +1,21 @@
 import { client } from './MongoConnection.js'
 import { ObjectId } from 'mongodb'
 
-const getAllDireccionesByUsuario = (usuario) => {
+const getAllByUsuario = (usuario) => {
 	const _id = new ObjectId(usuario._id)
-
 	return new Promise(async (resolve, reject) => {
 		try {
 			await client.connect()
-			const { direcciones } = await client.db().collection('Usuario').findOne({
+			const { metodosPago } = await client.db().collection('Usuario').findOne({
 				_id,
-				direcciones: { $exists: true },
+				metodosPago: { $exists: true },
 			}, {
 				projection: {
 					_id: false,
-					direcciones: true
+					metodosPago: true
 				}
-			}) || { direcciones: [] }
-			resolve(direcciones)
+			}) || { metodosPago: [] }
+			resolve(metodosPago)
 		} catch (error) {
 			reject(error)
 		} finally {
@@ -25,7 +24,7 @@ const getAllDireccionesByUsuario = (usuario) => {
 	})
 }
 
-const createDireccion = (usuario, direccion) => {
+const createMetodoPago = (usuario, metodoPago) => {
 	const _id = new ObjectId(usuario._id)
 
 	return new Promise(async (resolve, reject) => {
@@ -33,78 +32,78 @@ const createDireccion = (usuario, direccion) => {
 			await client.connect()
 			await client.db().collection('Usuario').updateOne({ _id }, {
 				$push: {
-					direcciones: {
+					metodosPago: {
 						_id: new ObjectId(),
-						...direccion,
+						...metodoPago,
 						estado: 'activo'
 					}
 				}
 			})
-			resolve('Dirección agregada con éxito.')
+			resolve('Método de Pago agregado con éxito.')
 		} catch (error) {
 			reject(error)
 		} finally {
-			await client.close()
+			client.close()
 		}
 	})
 }
 
-const updateDireccion = (direccion) => {
-	const _id = new ObjectId(direccion._id)
-	delete direccion._id
+const updateMetodoPago = (metodoPago) => {
+	const _id = new ObjectId(metodoPago._id)
+	delete metodoPago._id
 
 	return new Promise(async (resolve, reject) => {
 		try {
 			await client.connect()
 			await client.db().collection('Usuario').updateOne({
-				"direcciones._id": _id
+				"metodosPago._id": _id,
 			}, {
 				$set: {
-					"direcciones.$": {
+					"metodosPago.$": {
 						_id,
-						...direccion,
+						...metodoPago
 					}
 				}
 			})
-			resolve('Dirección actualizada con éxito.')
+			resolve('Método de Pago actualizado con éxito.')
 		} catch (error) {
 			reject(error)
 		} finally {
-			await client.close()
+			client.close()
 		}
 	})
 }
 
-const deleteDireccion = (direccion) => {
-	const _id = new ObjectId(direccion._id)
-	delete direccion._id
+const deleteMetodoPago = (metodoPago) => {
+	const _id = new ObjectId(metodoPago._id)
+	delete metodoPago._id
 
 	return new Promise(async (resolve, reject) => {
 		try {
 			await client.connect()
 			await client.db().collection('Usuario').updateOne({
-				"direcciones._id": _id
+				'metodosPago._id': _id,
 			}, {
 				$set: {
-					"direcciones.$": {
+					'metodosPago.$': {
 						_id,
-						...direccion,
-						estado: 'inactivo'
+						...metodoPago,
+						estado: 'inactivo',
 					}
 				}
 			})
-			resolve('Dirección eliminada con éxito.')
+			resolve('Método de Pago eliminado con éxito.')
 		} catch (error) {
 			reject(error)
 		} finally {
-			await client.close()
+			client.close()
 		}
 	})
 }
 
-export const DireccionDAO = {
-	getAllDireccionesByUsuario,
-	createDireccion,
-	updateDireccion,
-	deleteDireccion,
+export const MetodoPagoDAO = {
+	getAllByUsuario,
+	createMetodoPago,
+	updateMetodoPago,
+	deleteMetodoPago,
 }

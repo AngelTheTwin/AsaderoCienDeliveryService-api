@@ -9,7 +9,9 @@ routerProducto.get('/producto/getAll', async (_, res) => {
 		res.json(productos)
 	} catch (error) {
 		console.error(error)
-		res.status(500).json({ error })
+		res.status(500).json({ 
+			error: error.message
+		})
 	}
 })
 
@@ -19,7 +21,9 @@ routerProducto.get('/producto/getAllGroupedByCategoria', async (_, res) => {
 		res.json(productos)
 	} catch (error) {
 		console.error(error)
-		res.status(500).json({ error })
+		res.status(500).json({ 
+			error: error.message
+		})
 	}
 })
 
@@ -30,7 +34,9 @@ routerProducto.post('/producto/create', async (req, res) => {
 		res.json({ mensaje })
 	} catch (error) {
 		console.error(error)
-		res.status(500).json({ error })
+		res.status(500).json({ 
+			error: error.message
+		})
 	}
 })
 
@@ -41,7 +47,9 @@ routerProducto.put('/producto/update', async (req, res) => {
 		res.json({ mensaje })
 	} catch (error) {
 		console.error(error)
-		res.status(500).json({ error })
+		res.status(500).json({ 
+			error: error.message
+		})
 	}
 })
 
@@ -52,6 +60,8 @@ routerProducto.delete('/producto/delete', async (req, res) => {
 		res.json({ mensaje })
 	} catch (error) {
 		console.error(error)
-		res.status(500).json({ error })
+		res.status(500).json({ 
+			error: error.message
+		})
 	}
 })

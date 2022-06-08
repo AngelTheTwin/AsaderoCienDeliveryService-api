@@ -3,6 +3,8 @@ import cors from 'cors'
 import express from 'express'
 import { routerUsuario } from './routes/user.js'
 import { routerProducto } from './routes/producto.js'
+import { reouterDireccion } from './routes/direccion.js'
+import { routerMetodoPago } from './routes/metodoPago.js'
 
 const app = express()
 
@@ -17,6 +19,8 @@ app.use(cors())
 // Routes
 app.use(routerUsuario)
 app.use(routerProducto)
+app.use(reouterDireccion)
+app.use(routerMetodoPago)
 
 // Default route
 app.get('/', (_, res) => {

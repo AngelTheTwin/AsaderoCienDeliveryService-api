@@ -55,15 +55,15 @@ const createProducto = (newProducto) => {
 	})
 }
 
-const updateProducto = (produto) => {
-	const _id = new ObjectId(produto._id)
-	delete produto._id
+const updateProducto = (producto) => {
+	const _id = new ObjectId(producto._id)
+	delete producto._id
 
 	return new Promise(async (resolve, reject) => {
 		try {
 			await client.connect()
 			await client.db().collection('Producto').updateOne({ _id }, {
-				$set: { ...produto }
+				$set: { ...producto }
 			})
 			resolve('Producto actualizado con éxito.')
 		} catch (error) {

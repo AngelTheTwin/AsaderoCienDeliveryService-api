@@ -9,7 +9,9 @@ routerPedido.get('/getAll', async (_, res) => {
 		res.json({ pedidos })
 	} catch (error) {
 		console.error({ error })
-		res.status(500).json({ error })
+		res.status(500).json({ 
+			error: error.message
+		})
 	}
 })
 
@@ -20,7 +22,9 @@ routerPedido.post('/create', async (req, res) => {
 		res.json({ mensaje })
 	} catch (error) {
 		console.error(error)
-		res.status(500).json({ error })
+		res.status(500).json({ 
+			error: error.message
+		})
 	}
 })
 
@@ -31,7 +35,9 @@ routerPedido.put('/update', async (req, res) => {
 		res.json({ mensaje })
 	} catch (error) {
 		console.log(error)
-		res.status(500).json({ error })
+		res.status(500).json({ 
+			error: error.message
+		})
 	}
 })
 
@@ -42,6 +48,8 @@ routerPedido.delete('/delete', async (req, res) => {
 		res.json({ mensaje })
 	} catch (error) {
 		console.log(error)
-		res.status(500).json({ error })
+		res.status(500).json({ 
+			error: error.message
+		})
 	}
 })
