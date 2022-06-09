@@ -26,6 +26,7 @@ const getAllByUsuario = (usuario) => {
 
 const createMetodoPago = (usuario, metodoPago) => {
 	const _id = new ObjectId(usuario._id)
+	const _idMetodoPago = new ObjectId()
 
 	return new Promise(async (resolve, reject) => {
 		try {
@@ -33,12 +34,20 @@ const createMetodoPago = (usuario, metodoPago) => {
 			await client.db().collection('Usuario').updateOne({ _id }, {
 				$push: {
 					metodosPago: {
-						_id: new ObjectId(),
+						_id: _idMetodoPago,
 						...metodoPago,
 						estado: 'activo'
 					}
 				}
 			})
+			let resultado = await client.db().collection('Usuario').findOne({
+				metodosPago: {
+					_id: _idMetodoPago,
+					...metodoPago,
+					estado: 'activo'
+				}
+			})
+			console.log(resultado)
 			resolve('Método de Pago agregado con éxito.')
 		} catch (error) {
 			reject(error)

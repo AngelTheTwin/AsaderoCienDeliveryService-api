@@ -16,19 +16,18 @@ const getAllProductos = () => {
 }
 
 const getAllProductosGroupedByCategoria = () => {
-	const pipeline = [
-		{
-			$group: {
-				'_id': '$categoria',
-				'productos': { $addToSet: '$$ROOT' }
-			}
-		}
-	]
-
 	return new Promise(async (resolve, reject) => {
 		try {
 			await client.connect()
-			const produtos = await client.db().collection('Producto').aggregate(pipeline).toArray()
+			const produtos = await client.db().collection('Producto').aggregate([
+				{
+					$group: {
+						'_id': '$categoria',
+						'productos': { $addToSet: '$$ROOT' }
+					}
+				}
+			])
+			.toArray()
 			resolve(produtos)
 		} catch (error) {
 			reject(error)

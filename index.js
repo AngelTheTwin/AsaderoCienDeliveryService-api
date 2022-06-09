@@ -5,6 +5,8 @@ import { routerUsuario } from './routes/user.js'
 import { routerProducto } from './routes/producto.js'
 import { reouterDireccion } from './routes/direccion.js'
 import { routerMetodoPago } from './routes/metodoPago.js'
+import { routerCategoria } from './routes/categoria.js'
+import { routerPedido } from './routes/pedido.js'
 
 const app = express()
 
@@ -21,6 +23,8 @@ app.use(routerUsuario)
 app.use(routerProducto)
 app.use(reouterDireccion)
 app.use(routerMetodoPago)
+app.use(routerCategoria)
+app.use(routerPedido)
 
 // Default route
 app.get('/', (_, res) => {
