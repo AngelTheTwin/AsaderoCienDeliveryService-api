@@ -19,7 +19,11 @@ const createPedido = (pedido) => {
 	return new Promise(async (resolve, reject) => {
 		try {
 			await client.connect()
-			await client.db().collection('Pedido').insertOne(pedido)
+			await client.db().collection('Pedido').insertOne({
+				...pedido,
+				estado: 'creado',
+				fecha: new Date()
+			})
 			resolve('Pedido creado con éxito.')
 		} catch (error) {
 			reject(error)
