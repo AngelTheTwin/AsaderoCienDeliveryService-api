@@ -15,14 +15,30 @@ const getAllPedidos = () => {
 	})
 }
 
-const createPedido = (pedido) => {
+const getAllPedidosByUsuario = (usuario) => {
+	const _id = usuario._id
+	return new Promise(async (resolve, reject) => {
+		try {
+			await client.connect()
+			const pedidos = await client.db().collection('Pedido').find({usuario: _id}).toArray()
+			resolve(pedidos)
+		} catch(error) {
+			reject(error)
+		} finally {
+			await client.close()
+		}
+	})
+}
+
+const createPedido = (usuario, pedido) => {
 	return new Promise(async (resolve, reject) => {
 		try {
 			await client.connect()
 			await client.db().collection('Pedido').insertOne({
 				...pedido,
-				estado: 'creado',
-				fecha: new Date()
+				estado: 'En proceso',
+				fecha: new Date(), 
+				usuario: usuario._id
 			})
 			resolve('Pedido creado con éxito.')
 		} catch (error) {
@@ -71,4 +87,5 @@ export const PedidoDAO = {
 	createPedido,
 	updatePedido,
 	deletePedido,
+	getAllPedidosByUsuario,
 }

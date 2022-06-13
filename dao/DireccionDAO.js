@@ -7,7 +7,7 @@ const getAllDireccionesByUsuario = (usuario) => {
 	return new Promise(async (resolve, reject) => {
 		try {
 			await client.connect()
-			const { direcciones } = await client.db().collection('Usuario').findOne({
+			let { direcciones } = await client.db().collection('Usuario').findOne({
 				_id,
 				direcciones: { $exists: true },
 			}, {
@@ -16,6 +16,7 @@ const getAllDireccionesByUsuario = (usuario) => {
 					direcciones: true
 				}
 			}) || { direcciones: [] }
+			direcciones = direcciones.filter(direccion => direccion.estado === 'activo')
 			resolve(direcciones)
 		} catch (error) {
 			reject(error)
@@ -27,6 +28,7 @@ const getAllDireccionesByUsuario = (usuario) => {
 
 const createDireccion = (usuario, direccion) => {
 	const _id = new ObjectId(usuario._id)
+	delete direccion.isNuevaDireccion
 
 	return new Promise(async (resolve, reject) => {
 		try {
@@ -34,9 +36,9 @@ const createDireccion = (usuario, direccion) => {
 			await client.db().collection('Usuario').updateOne({ _id }, {
 				$push: {
 					direcciones: {
-						_id: new ObjectId(),
 						...direccion,
-						estado: 'activo'
+						_id: new ObjectId(),
+						estado: 'activo',
 					}
 				}
 			})
