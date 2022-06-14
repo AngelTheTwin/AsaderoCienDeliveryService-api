@@ -5,7 +5,7 @@ const getAllPedidos = () => {
 	return new Promise(async (resolve, reject) => {
 		try {
 			await client.connect()
-			const pedidos = await client.db().collection('Pedido').find().toArray()
+			const pedidos = await client.db().collection('Pedido').find({estado: 'En proceso'}).toArray()
 			resolve(pedidos)
 		} catch (error) {
 			reject(error)
@@ -21,6 +21,21 @@ const getAllPedidosByUsuario = (usuario) => {
 		try {
 			await client.connect()
 			const pedidos = await client.db().collection('Pedido').find({usuario: _id}).toArray()
+			resolve(pedidos)
+		} catch(error) {
+			reject(error)
+		} finally {
+			await client.close()
+		}
+	})
+}
+
+const getAllPedidosByRepartidor = (usuario) => {
+	const _id = usuario._id
+	return new Promise(async (resolve, reject) => {
+		try {
+			await client.connect()
+			const pedidos = await client.db().collection('Pedido').find({repartidor: _id}).toArray()
 			resolve(pedidos)
 		} catch(error) {
 			reject(error)
@@ -50,10 +65,11 @@ const createPedido = (usuario, pedido) => {
 }
 
 const updatePedido = (pedido) => {
-	const _id = pedido._id
+	const _id = ObjectId(pedido._id)
 	delete pedido._id
 
 	return new Promise(async (resolve, reject) => {
+		console.log(pedido)
 		try {
 			await client.connect()
 			await client.db().collection('Pedido').updateOne({ _id }, {
@@ -88,4 +104,5 @@ export const PedidoDAO = {
 	updatePedido,
 	deletePedido,
 	getAllPedidosByUsuario,
+	getAllPedidosByRepartidor,
 }

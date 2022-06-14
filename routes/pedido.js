@@ -29,6 +29,19 @@ routerPedido.get('/pedido/getAllByUsuario', ensureAuthenticated,  async (req, re
 	}
 })
 
+routerPedido.get('/pedido/getAllByRepartidor', ensureAuthenticated,  async (req, res) => {
+	const usuario = req.user
+	try {
+		const pedidos = await PedidoDAO.getAllPedidosByRepartidor(usuario)
+		res.json(pedidos)
+	} catch (error) {
+		console.error({ error })
+		res.status(500).json({ 
+			error: error.message
+		})
+	}
+})
+
 routerPedido.post('/pedido/create',ensureAuthenticated, async (req, res) => {
 	const usuario = req.user
 	const newPedido = req.body
